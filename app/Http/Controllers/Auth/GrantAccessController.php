@@ -16,7 +16,8 @@ class GrantAccessController extends Controller
             'password' => 'required_if:grant_type,password|string',
             'remember_me' => 'boolean',
             'device_name' => 'required|string',
-            'grant_type' => 'required|string'
+            'grant_type' => 'required|string',
+            'refresh_token' => 'string'
         ]);
                 
         return PasswordGrantClientFactory::make($request->device_name)->get($credentials);

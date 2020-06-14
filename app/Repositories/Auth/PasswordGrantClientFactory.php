@@ -8,9 +8,9 @@ class PasswordGrantClientFactory
 {
     public static function make($deviceName): PasswordGrantClient
     {
-        if (strcasecmp($deviceName,'android') == 0) {
+        if (strcasecmp($deviceName, 'android') == 0) {
             return new AndroidClient;
-        } elseif (strcasecmp($deviceName,'ios') == 0) {
+        } elseif (strcasecmp($deviceName, 'ios') == 0) {
             return new IOSClient;
         }
 
@@ -21,18 +21,23 @@ class PasswordGrantClientFactory
 abstract class PasswordGrantClient
 {
     abstract public function get($credentials);
-    
-    function makeRequest($credentials){
+
+    function makeRequest($credentials)
+    {
         $request = Request::create('oauth/token', 'POST', $credentials, [], [], [
             'HTTP_Accept' => 'application/json',
         ]);
         $response = app()->handle($request);
         $decodedResponse = json_decode($response->getContent(), true);
-        
+
         if ($response->getStatusCode() != 200) {
-            return response(['error' => 'Incorrect username or password','content'=>$response->getContent(),'req'=>$credentials], $response->getStatusCode());
+            return response([
+                'error' => 'Incorrect username or password',
+                // 'content' => $response->getContent(),
+                // 'req' => $credentials
+            ], $response->getStatusCode());
         }
-    
+
         return $decodedResponse;
     }
 }
